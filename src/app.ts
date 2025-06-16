@@ -75,8 +75,26 @@ app.get("/notes", async (req: Request, res: Response) => {
   }
 });
 
+app.get("/notes/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    // one way to handle this
+    // const notes = await Note.findOne({
+    //   _id: id,
+    // });
+    // another way to handle this
+    const note = await Note.findById(id);
 
-
+    res.status(200).json(note);
+  } catch (error: unknown) {
+    console.error("Error fetching note:", error);
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+});
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running! 😍");
