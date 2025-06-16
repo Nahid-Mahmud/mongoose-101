@@ -47,7 +47,7 @@ userRoutes.get("/", async (req: Request, res: Response) => {
     if (!users || users.length === 0) {
       res.status(404).json({ message: "No users found" });
     }
-    res.status(200).json(users);
+    res.status(200).json({ users, success: true, message: "Users fetched successfully" });
   } catch (error: unknown) {
     console.error("Error fetching users:", error);
     if (error instanceof Error) {
@@ -69,6 +69,7 @@ userRoutes.put("/:id", async (req: Request, res: Response) => {
     res.status(200).json({
       message: "User updated successfully",
       user: updateUser,
+      success: true,
     });
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -91,7 +92,7 @@ userRoutes.get("/:id", async (req: Request, res: Response) => {
     if (!user) {
       res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json(user);
+    res.status(200).json({ user, success: true, message: "User fetched successfully" });
   } catch (error: unknown) {
     console.error("Error fetching user:", error);
     if (error instanceof Error) {
@@ -115,6 +116,7 @@ userRoutes.delete("/:id", async (req: Request, res: Response) => {
     res.status(200).json({
       message: "User deleted successfully",
       user: deletedUser,
+      success: true,
     });
   } catch (error: unknown) {
     console.error("Error deleting user:", error);
