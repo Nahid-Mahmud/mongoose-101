@@ -26,6 +26,10 @@ const noteSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  tags: {
+    label: { type: String },
+    color: { type: String, default: "blue" },
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -35,7 +39,7 @@ const noteSchema = new Schema({
 const Note = model("Note", noteSchema);
 
 // Route to create a new note
-app.post("/create-note", async (req: Request, res: Response) => {
+app.post("/notes/create-note", async (req: Request, res: Response) => {
   const { title, content } = req.body;
   try {
     const newNote = new Note({
@@ -47,9 +51,13 @@ app.post("/create-note", async (req: Request, res: Response) => {
       message: "Note created successfully",
       note: savedNote,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error creating note:", error);
-    res.status(500).json({ message: "Internal server error" });
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
   }
 });
 
