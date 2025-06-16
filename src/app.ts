@@ -101,11 +101,17 @@ app.patch("/notes/:id", async (req: Request, res: Response) => {
   const updateData: Record<string, any> = req.body;
 
   try {
-    const updateNote = await Note.findByIdAndUpdate(id, { $set: updateData }, { new: true, runValidators: true });
+    // const updateNote = await Note.findByIdAndUpdate(id, { $set: updateData }, { new: true, runValidators: true });
     // const updateNote = await Note.findByIdAndUpdate(id, updateData, {
     //   new: true,
     //   runValidators: true
     // });
+
+    const updateNote = await Note.findOneAndUpdate(
+      { _id: id },
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
 
     if (!updateNote) {
       res.status(404).json({ message: "Note not found" });
