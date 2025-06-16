@@ -12,7 +12,7 @@ async function main() {
     if (!mongodbUri) {
       throw new Error("MONGODB_URI environment variable is not set. 🥲");
     }
-    await mongoose.connect(mongodbUri + "/test").then(() => {
+    await mongoose.connect(mongodbUri).then(() => {
       console.log("Connected to MongoDB successfully");
     });
     server = app.listen(port, () => {
