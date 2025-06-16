@@ -1,9 +1,9 @@
-enum UserRole {
-  user,
-  admin,
+export enum UserRole {
+  user = "user",
+  admin = "admin",
 }
 
-interface IUser {
+export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
