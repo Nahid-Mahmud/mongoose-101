@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
+import INote from "../interface/notes.interface";
 
-const noteSchema = new Schema(
+const noteSchema = new Schema<INote>(
   {
     title: {
       type: String,
@@ -36,6 +37,6 @@ const noteSchema = new Schema(
   }
 );
 
-const Note = model("Note", noteSchema);
+const Note = model<INote>("Note", noteSchema);
 
 export default Note;
