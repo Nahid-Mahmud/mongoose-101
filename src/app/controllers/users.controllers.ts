@@ -57,3 +57,47 @@ userRoutes.get("/", async (req: Request, res: Response) => {
     }
   }
 });
+
+// update user
+userRoutes.put("/:id", async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const updateData = req.body;
+
+  try {
+    // check if the user exists
+    const updateUser = await User.findByIdAndUpdate(userId, updateData, { new: true, runValidators: true });
+    res.status(200).json({
+      message: "User updated successfully",
+      user: updateUser,
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+});
+
+// get user by id
+
+userRoutes.get("/:id", async (req: Request, res: Response) => {
+  const userId = req.params.id;
+
+  try {
+    // check if the user exists
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error: unknown) {
+    console.error("Error fetching user:", error);
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+});
