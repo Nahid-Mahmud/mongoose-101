@@ -96,6 +96,35 @@ app.get("/notes/:id", async (req: Request, res: Response) => {
   }
 });
 
+app.patch("/notes/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updateData: Record<string, any> = req.body;
+
+  try {
+    const updateNote = await Note.findByIdAndUpdate(id, { $set: updateData }, { new: true, runValidators: true });
+    // const updateNote = await Note.findByIdAndUpdate(id, updateData, {
+    //   new: true,
+    //   runValidators: true
+    // });
+
+    if (!updateNote) {
+      res.status(404).json({ message: "Note not found" });
+    }
+
+    res.status(200).json({
+      message: "Note updated successfully",
+      note: updateNote,
+    });
+  } catch (error: unknown) {
+    console.error("Error updating note:", error);
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+});
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running! 😍");
 });
