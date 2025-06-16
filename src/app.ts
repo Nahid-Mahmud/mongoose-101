@@ -61,6 +61,23 @@ app.post("/notes/create-note", async (req: Request, res: Response) => {
   }
 });
 
+app.get("/notes", async (req: Request, res: Response) => {
+  try {
+    const notes = await Note.find();
+    res.status(200).json(notes);
+  } catch (error: unknown) {
+    console.error("Error fetching notes:", error);
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+});
+
+
+
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running! 😍");
 });
