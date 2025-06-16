@@ -10,10 +10,17 @@ const noteSchema = new Schema({
   title: {
     type: String,
     required: true,
+    trim: true,
   },
   content: {
     type: String,
     required: true,
+    trim: true,
+  },
+  category: {
+    type: String,
+    enum: ["work", "personal", "study", "other"],
+    default: "personal",
   },
 });
 
