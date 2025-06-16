@@ -22,6 +22,14 @@ const noteSchema = new Schema({
     enum: ["work", "personal", "study", "other"],
     default: "personal",
   },
+  pinned: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Note = model("Note", noteSchema);
