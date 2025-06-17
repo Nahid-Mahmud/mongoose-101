@@ -6,22 +6,11 @@ export const userRoutes = Router();
 // crate user
 
 userRoutes.post("/create-user", async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { email } = req.body;
 
   try {
-    // check if the user already exists
-    const existingUser = await User.findOne({ email: email });
-
-    if (existingUser) {
-      res.status(400).json({ message: "User already exists" });
-    }
     // create a new user
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      password,
-    });
+    const newUser = new User(req.body);
 
     const savedUser = await newUser.save();
 
