@@ -4,8 +4,8 @@ import { IUser, UserRole } from "../interface/user.interface";
 
 const userSchema = new Schema<IUser>(
   {
-    firstName: { type: String, required: true, trim: true },
-    lastName: { type: String, required: true, trim: true },
+    firstName: { type: String, required: true, trim: true, minlength: 2, maxlength: 50 },
+    lastName: { type: String, required: true, trim: true, minlength: 2, maxlength: 50 },
     email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     password: { type: String, required: true },
     role: {
