@@ -13,6 +13,7 @@ const userSchema = new Schema<IUser>(
       enum: UserRole,
       default: UserRole.user,
     },
+    age: { type: Number, required: true, min: 18, max: 100 },
   },
   {
     versionKey: false,

@@ -8,5 +8,6 @@ export interface IUser {
   lastName: string;
   email: string;
   password: string;
+  age: number;
   role: UserRole;
 }
