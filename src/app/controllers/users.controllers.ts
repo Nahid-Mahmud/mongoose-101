@@ -1,7 +1,26 @@
 import express, { Request, Response, Router } from "express";
 import { User } from "../models/user.model";
+import { z } from "zod";
 
 export const userRoutes = Router();
+
+// Define a schema for user creation validation
+const userCreationSchema = z.object({
+  firstName: z
+    .string({
+      // invalid_type_error: "First name must be a string",
+      // required_error: "First name is required",
+      // description: "First name of the user",
+    })
+    .min(2, "First name must be at least 2 characters long")
+    .max(50)
+    .trim(),
+  lastName: z.string().min(2).max(50).trim(),
+  email: z.string().email(),
+  password: z.string().min(6),
+  age: z.number().min(18).max(100),
+  role: z.enum(["USER", "ADMIN", "SUPERADMIN"]).default("USER").optional(),
+});
 
 // crate user
 
@@ -10,7 +29,13 @@ userRoutes.post("/create-user", async (req: Request, res: Response) => {
 
   try {
     // create a new user
-    const newUser = new User(req.body);
+
+    const validatedUserData = userCreationSchema.parseAsync(req.body);
+
+    // console.log("Validated user data:", validatedUserData);
+
+    // const newUser = new User(req.body);
+    const newUser = new User(await validatedUserData);
 
     const savedUser = await newUser.save();
 
@@ -18,13 +43,13 @@ userRoutes.post("/create-user", async (req: Request, res: Response) => {
       message: "User created successfully",
       user: savedUser,
     });
-  } catch (error: unknown) {
-    console.error("Error creating user:", error);
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "An unknown error occurred" });
-    }
+  } catch (error: any) {
+    // console.error("Error creating user:", error);
+    res.status(400).send({
+      success: false,
+      message: error.message,
+      error,
+    });
   }
 });
 
