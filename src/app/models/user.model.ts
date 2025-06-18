@@ -1,7 +1,19 @@
 // In your user.model.ts file
 import { Schema, model } from "mongoose";
-import { IUser, UserRole } from "../interface/user.interface";
+import { IAddress, IUser, UserRole } from "../interface/user.interface";
 import validator from "validator";
+
+const addressSchema = new Schema<IAddress>(
+  {
+    street: { type: String },
+    city: { type: String },
+    zipCode: { type: Number },
+  },
+  {
+    _id: false,
+    timestamps: true,
+  }
+);
 
 const userSchema = new Schema<IUser>(
   {
@@ -34,6 +46,7 @@ const userSchema = new Schema<IUser>(
       trim: true,
     },
     age: { type: Number, required: true, min: [18, "Must be at least 18, got {VALUE}"], max: 100 },
+    address: { type: addressSchema },
   },
   {
     versionKey: false,

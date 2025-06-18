@@ -20,6 +20,11 @@ const userCreationSchema = z.object({
   password: z.string().min(6),
   age: z.number().min(18).max(100),
   role: z.enum(["USER", "ADMIN", "SUPERADMIN"]).default("USER").optional(),
+  address: z.object({
+    street: z.string().optional(),
+    city: z.string().optional(),
+    zipCode: z.number().optional(),
+  }),
 });
 
 // crate user
