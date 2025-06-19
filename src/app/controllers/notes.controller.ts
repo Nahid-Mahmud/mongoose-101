@@ -4,11 +4,17 @@ import Note from "../models/notes.model";
 const notesRouter = express.Router();
 
 notesRouter.post("/create-note", async (req: Request, res: Response) => {
-  const { title, content } = req.body;
+  const { title, content, user } = req.body;
+  // check for valid userId
+  // const user = await Note.findById(userId);
+  // if (!user) {
+  //   res.status(400).json({ message: "Invalid user ID" });
+  // }
   try {
     const newNote = new Note({
       title,
       content,
+      user,
     });
     const savedNote = await newNote.save();
     res.status(201).json({
@@ -27,7 +33,12 @@ notesRouter.post("/create-note", async (req: Request, res: Response) => {
 
 notesRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const notes = await Note.find();
+    const notes = await Note.find()
+      .populate({
+        path: "user",
+        select: "-password -address -role -age -createdAt -updatedAt",
+      })
+      .sort({ createdAt: -1 });
     res.status(200).json(notes);
   } catch (error: unknown) {
     console.error("Error fetching notes:", error);

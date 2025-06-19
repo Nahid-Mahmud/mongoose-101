@@ -26,10 +26,11 @@ const noteSchema = new Schema<INote>(
       label: { type: String },
       color: { type: String, default: "blue" },
     },
-    // createdAt: {
-    //   type: Date,
-    //   default: Date.now,
-    // },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   {
     versionKey: false, // Disable __v field
