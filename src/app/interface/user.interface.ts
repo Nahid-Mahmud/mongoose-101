@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export enum UserRole {
   USER = "USER",
   ADMIN = "ADMIN",
@@ -21,5 +23,9 @@ export interface IUser {
 }
 
 export interface UserInstanceMethods {
+  hashPassword(password: string): Promise<string>;
+}
+
+export interface UserStaticMethods extends Model<IUser> {
   hashPassword(password: string): string;
 }

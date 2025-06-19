@@ -47,7 +47,9 @@ userRoutes.post("/create-user", async (req: Request, res: Response) => {
 
     // const newUser = new User(req.body);
     const newUser = new User(await validatedUserData);
-    newUser.hashPassword(newUser.password);
+    // newUser.password = await newUser.hashPassword(newUser.password); // method from instance
+    const password = await User.hashPassword(newUser.password); // static method
+    newUser.password = password; // set the hashed password
     // const hashedPassword = await (body.password);
 
     const savedUser = await newUser.save();
