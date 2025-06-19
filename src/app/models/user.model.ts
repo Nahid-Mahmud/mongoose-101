@@ -1,7 +1,8 @@
 // In your user.model.ts file
-import { Schema, model } from "mongoose";
-import { IAddress, IUser, UserRole } from "../interface/user.interface";
+import bcrypt from "bcryptjs";
+import { Model, model, Schema } from "mongoose";
 import validator from "validator";
+import { IAddress, IUser, UserInstanceMethods, UserRole } from "../interface/user.interface";
 
 const addressSchema = new Schema<IAddress>(
   {
@@ -15,7 +16,7 @@ const addressSchema = new Schema<IAddress>(
   }
 );
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser, Model<IUser, {}, UserInstanceMethods>, UserInstanceMethods>(
   {
     firstName: { type: String, required: true, trim: true, minlength: 2, maxlength: 50 },
     lastName: { type: String, required: true, trim: true, minlength: 2, maxlength: 50 },
@@ -54,4 +55,9 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-export const User = model<IUser>("User", userSchema);
+userSchema.method("hashPassword", async function hashPassword(plainPassword: string) {
+  const password = await bcrypt.hash(plainPassword, 10);
+  return password;
+});
+
+export const User = model<IUser, Model<IUser, {}, UserInstanceMethods>>("User", userSchema);

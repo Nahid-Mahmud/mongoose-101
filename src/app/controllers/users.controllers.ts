@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import { User } from "../models/user.model";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 export const userRoutes = Router();
 
@@ -30,23 +31,40 @@ const userCreationSchema = z.object({
 // crate user
 
 userRoutes.post("/create-user", async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const body = req.body;
+
+  // //  hash the password
+  // const hashedPassword = await bcrypt.hash(body.password, 10);
+
+  // body.password = hashedPassword;
 
   try {
     // create a new user
 
-    const validatedUserData = userCreationSchema.parseAsync(req.body);
+    const validatedUserData = userCreationSchema.parseAsync(body);
 
     // console.log("Validated user data:", validatedUserData);
 
     // const newUser = new User(req.body);
     const newUser = new User(await validatedUserData);
+    newUser.hashPassword(newUser.password);
+    // const hashedPassword = await (body.password);
 
     const savedUser = await newUser.save();
 
     res.status(201).json({
       message: "User created successfully",
-      user: savedUser,
+      // user: savedUser,
+      // send the user without password
+      user: {
+        _id: savedUser._id,
+        firstName: savedUser.firstName,
+        lastName: savedUser.lastName,
+        email: savedUser.email,
+        age: savedUser.age,
+        role: savedUser.role,
+        address: savedUser.address,
+      },
     });
   } catch (error: any) {
     // console.error("Error creating user:", error);

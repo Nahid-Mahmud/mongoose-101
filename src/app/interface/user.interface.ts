@@ -19,3 +19,7 @@ export interface IUser {
   role: UserRole;
   address: IAddress;
 }
+
+export interface UserInstanceMethods {
+  hashPassword(password: string): string;
+}
