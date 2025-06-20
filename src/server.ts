@@ -4,7 +4,8 @@ import app from "./app";
 import mongoose from "mongoose";
 
 const mongodbUri = process.env.MONGODB_URI;
-const port = process.env.PORT;
+// Default port for the server
+const port = process.env.PORT || 3000;
 
 async function main() {
   let server;
