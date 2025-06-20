@@ -81,7 +81,7 @@ userRoutes.post("/create-user", async (req: Request, res: Response) => {
 
 userRoutes.get("/", async (req: Request, res: Response) => {
   try {
-    const users = await User.find().sort({ firstName: "asc", email: "desc" }).skip(5).limit(5);
+    const users = await User.find({});
     // .select("-password");
     if (!users || users.length === 0) {
       res.status(404).json({ message: "No users found" });
