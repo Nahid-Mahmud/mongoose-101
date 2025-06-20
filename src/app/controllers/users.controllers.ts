@@ -81,7 +81,8 @@ userRoutes.post("/create-user", async (req: Request, res: Response) => {
 
 userRoutes.get("/", async (req: Request, res: Response) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find();
+    // .select("-password");
     if (!users || users.length === 0) {
       res.status(404).json({ message: "No users found" });
     }
@@ -147,7 +148,7 @@ userRoutes.delete("/:id", async (req: Request, res: Response) => {
 
   try {
     // check if the user exists
-    const deletedUser = await User.findByIdAndDelete(userId);
+    const deletedUser = await User.findOneAndDelete({ _id: userId });
     if (!deletedUser) {
       res.status(404).json({ message: "User not found" });
     }

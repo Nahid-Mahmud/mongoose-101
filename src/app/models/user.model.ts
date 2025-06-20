@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { Model, model, Schema } from "mongoose";
 import validator from "validator";
 import { IAddress, IUser, UserInstanceMethods, UserRole, UserStaticMethods } from "../interface/user.interface";
+import Note from "./notes.model";
 
 const addressSchema = new Schema<IAddress>(
   {
@@ -52,6 +53,8 @@ const userSchema = new Schema<IUser, UserStaticMethods, UserInstanceMethods>(
   {
     versionKey: false,
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 
@@ -73,6 +76,24 @@ userSchema.pre("save", async function (next) {
 
 userSchema.post("save", function (doc) {
   console.log("User created successfully:", doc);
+});
+
+userSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    await Note.deleteMany({ user: doc._id });
+  }
+  // console.log("User deleted successfully:", doc);
+});
+
+userSchema.pre("find", function (next) {
+  this.select("-password");
+  // console the document being queried);
+  // console.log("Querying users without password field");
+  next();
+});
+
+userSchema.virtual("fullName").get(function () {
+  return `${this.firstName} ${this.lastName}`;
 });
 
 export const User = model<IUser, Model<IUser, {}, UserInstanceMethods> & UserStaticMethods>("User", userSchema);
