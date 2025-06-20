@@ -81,12 +81,12 @@ userRoutes.post("/create-user", async (req: Request, res: Response) => {
 
 userRoutes.get("/", async (req: Request, res: Response) => {
   try {
-    const users = await User.find();
+    const users = await User.find().sort({ firstName: "asc", email: "desc" }).skip(5).limit(5);
     // .select("-password");
     if (!users || users.length === 0) {
       res.status(404).json({ message: "No users found" });
     }
-    res.status(200).json({ users, success: true, message: "Users fetched successfully" });
+    res.status(200).json({ users, success: true, message: "Users fetched successfully", total: users.length });
   } catch (error: unknown) {
     console.error("Error fetching users:", error);
     if (error instanceof Error) {
