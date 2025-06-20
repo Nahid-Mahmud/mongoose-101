@@ -1,7 +1,6 @@
-import express, { Request, Response, Router } from "express";
-import { User } from "../models/user.model";
+import { Request, Response, Router } from "express";
 import { z } from "zod";
-import bcrypt from "bcryptjs";
+import { User } from "../models/user.model";
 
 export const userRoutes = Router();
 
@@ -48,8 +47,8 @@ userRoutes.post("/create-user", async (req: Request, res: Response) => {
     // const newUser = new User(req.body);
     const newUser = new User(await validatedUserData);
     // newUser.password = await newUser.hashPassword(newUser.password); // method from instance
-    const password = await User.hashPassword(newUser.password); // static method
-    newUser.password = password; // set the hashed password
+    // const password = await User.hashPassword(newUser.password); // static method
+    // newUser.password = password; // set the hashed password
     // const hashedPassword = await (body.password);
 
     const savedUser = await newUser.save();
